@@ -1,0 +1,22 @@
+language: go
+go_import_path: github.com/m-mizutani/guardduty-log-forwarder
+go:
+- 1.10.x
+before_install:
+- go get github.com/golang/dep/...
+install:
+- "$GOPATH/bin/dep ensure"
+script:
+- go test -v ./lib
+after_success:
+- env | cut -d = -f 1
+- echo 'StackName=guardduty-log-forwarder-test;CodeS3Bucket=guardduty-log-forwarder;CodeS3Prefix=functions'
+  | tr ";" "\n" > param.cfg
+- pip install --user awscli
+- make sam.yml
+- aws s3 cp sam.yml s3://guardduty-log-forwarder/templates/latest.yml
+- aws s3 cp sam.yml s3://guardduty-log-forwarder/templates/$TRAVIS_PULL_REQUEST_SHA.yml
+env:
+  global:
+  - secure: flKSoUZo+DRk6e3bE7Rz3DhDyQzgZrO66WpMn+d6EquJoqk6jjvgsJgmNG6tL+Vkiexi2Uk6A5tymubbIWetOlttyadPOVIdO2y7BA9y5SrqNRi/VPshOnqlEuPXJHudLtHYHxE+rb9ZD55XFMNHaSJ8nf6wEvpOLP9MFDrrmbAd2JJZTzP9dyEHFZAaw5rHbfKRPCdg9koenxPPwMhv7MAIfhOF0n5/bkWM6rVvISGcqx2TpneSKQPN79G80Y4uzlqLdPC+ojKcfsh6SKapMUQg/ARo678xd6ZkjTu95S+rspxXpykRC7bpweboCdd8jzs/HIrpFOzPpeajwzNbciBHtMb8ZViTx9s3JM94iMxGXEVdMHJZFlFS/vvmIXoNmvdRgW3NGNZKEIpIggdN5vZBO49wyU02UvDymXC4mCMB73BQRDeDxIX5wYFhQtFl/8rC/VXFCVVVzX0LWTDfgFMf3/zn53qTiFFKvTXa5H+dh9ID+MfCOPWPL/4KOFCpTpFqK0u3B4O1ShXe+13fNsXoqEglpQn0so+fldzL+djqQ+4IcwRCbPf8S95yjYSOt4Ga7rocNBcTFfIuprH0XkLNAFn8sqgvNcobf5QBqxvMOnEorw8PjZhNUNe84h6bJ3zv3nUVZCDUOqmNIpcsMStcLf1MD0qvxUtIDQJMghQ=
+  - secure: k3bZWDCEKkLSI8DbY+VU5XNqalHrmVsA3iXH2KE6GnpecAAb0MUPlubTSQnl4iZ1IxEK+X94NYoDzOZV4uIAZb3WsBdQxHrUYCPolKAXurLeS+3w0GmY6mfS7MxMFcK11/nyX+Kh3LSBmjLZSRdpxCuHnIq46xARyn1x0MVluEm/jFEbD5Dqim9IES1hCm1l+nfSjg8fQiX06OvHgvRZKp9XMQ65VaMGJe4HCR0px7NhxyDt+q0715XdF+UdiQGrpmXsXmg827dWni4FWEwLYCuKfiukMB5c+sASqTJjQ+lADyVSs2rPGnbMRsTT5YctBF54Xnd5Ft5zClhQwVn/vLPYnOJDITnZEfHF8eqcQCBbM7TdYvKRkRY8V0AQLIajRdUAudtmrQFti9RKT1MpYpqgbJhvYel3vd+ohhQN7VzPcPM2Zj0zb4eHd0uNQYNHth2vqieb66zWC/YsNeHYG15ObF/LdvXewBNl0O5bLrb2ps5VEyEK0DgG9h9QXZDbYt0AM+8au4HMQdigj6aWLQFQwDJq+iAMJtQTWuEuiMSwhH4aHfGkYwbppiU9x77EZjswgJViJE4LRmFnRo8fzb63pJZsss1NFSMLjw/WYyVl+NYLwxUAFGPkXJhvXcXLeCXOUbQL75kpFx6o5FXbbHGqnzouqNlDdFFiTfKGbNI=
