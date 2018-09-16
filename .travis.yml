@@ -7,8 +7,6 @@ before_install:
 install:
 - "$GOPATH/bin/dep ensure"
 script:
-- go test -v ./lib
-after_success:
 - env | cut -d = -f 1
 - echo 'StackName=guardduty-log-forwarder-test;CodeS3Bucket=guardduty-log-forwarder;CodeS3Prefix=functions'
   | tr ";" "\n" > param.cfg
