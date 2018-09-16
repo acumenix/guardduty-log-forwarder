@@ -1,0 +1,7 @@
+.vscode
+vendor/
+config/sites
+config/build
+*.cfg
+sam.yml
+build

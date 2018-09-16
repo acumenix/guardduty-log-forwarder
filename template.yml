@@ -1,0 +1,71 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: ''
+Parameters:
+  LambdaRoleArn:
+    Type: String
+    Default: ""
+  DstS3Bucket:
+    Type: String
+  DstS3Prefix:
+    Type: String
+  DstS3Region:
+    Type: String
+
+Conditions:
+  LambdaRoleRequired:
+    Fn::Equals: [ { Ref: LambdaRoleArn }, "" ]
+
+Resources:
+  GuardDutyForwarder:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: build
+      Handler: forwarder
+      Runtime: go1.x
+      Timeout: 30
+      MemorySize: 128
+      Role:
+        Fn::If: [ LambdaRoleRequired, {"Fn::GetAtt": LambdaRole.Arn}, {Ref: LambdaRoleArn} ]
+      Environment:
+        Variables:
+          S3_BUCKET:
+            Ref: DstS3Bucket
+          S3_PREFIX:
+            Ref: DstS3Prefix
+          S3_REGION:
+            Ref: DstS3Region
+      Events:
+        StreamEvent:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - aws.guardduty
+
+  LambdaRole:
+    Type: AWS::IAM::Role
+    Condition: LambdaRoleRequired
+    Properties:
+      AssumeRolePolicyDocument: 
+        Version: "2012-10-17"
+        Statement: 
+          - Effect: "Allow"
+            Principal: 
+              Service: ["lambda.amazonaws.com"]
+            Action: ["sts:AssumeRole"]
+      Path: "/"
+      ManagedPolicyArns:
+        - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      Policies: 
+        - PolicyName: "ChamberLambdaPolicy"
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: "Allow"
+                Action:
+                  - s3:PutObject
+                Resource:
+                  - Fn::Sub:
+                    - "arn:aws:s3:::${bucket}/${prefix}*"
+                    - { "bucket": {"Ref": DstS3Bucket}, "prefix": {"Ref": DstS3Prefix} }
