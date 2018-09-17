@@ -9,6 +9,7 @@ Parameters:
     Type: String
   DstS3Prefix:
     Type: String
+    Default: ""
   DstS3Region:
     Type: String
 
