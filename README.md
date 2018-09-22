@@ -13,10 +13,12 @@
 
 ### Deploy
 
+$REGION should be replaced with your AWS region. (e.g. `ap-northeast-1`)
+
 ```
-$ curl -O https://s3-ap-northeast-1.amazonaws.com/guardduty-log-forwarder/templates/latest.yml
+$ curl -O https://s3-$REGION.amazonaws.com/cfn-assets.$REGION/guardduty-log-forwarder/templates/latest.yml
 $ aws cloudformation deploy \
-      --template-file sam.yml \
+      --template-file latest.yml \
       --stack-name <YOUR_CLOUD_FORMATION_STACK_NAME> \
       --capabilities CAPABILITY_IAM \
       --parameter-overrides DstS3Bucket=<DST_S3_BUCKET_NAME> DstS3Region=<DST_S3_REGION>
