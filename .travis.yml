@@ -12,7 +12,7 @@ script:
   | tr ";" "\n" > param.cfg
 - pip install --user awscli
 - make build/forwarder
-- ./scripts/deploy-to-all-region.sh
+- ./scripts/package-to-all-region.sh
 env:
   global:
   - secure: flKSoUZo+DRk6e3bE7Rz3DhDyQzgZrO66WpMn+d6EquJoqk6jjvgsJgmNG6tL+Vkiexi2Uk6A5tymubbIWetOlttyadPOVIdO2y7BA9y5SrqNRi/VPshOnqlEuPXJHudLtHYHxE+rb9ZD55XFMNHaSJ8nf6wEvpOLP9MFDrrmbAd2JJZTzP9dyEHFZAaw5rHbfKRPCdg9koenxPPwMhv7MAIfhOF0n5/bkWM6rVvISGcqx2TpneSKQPN79G80Y4uzlqLdPC+ojKcfsh6SKapMUQg/ARo678xd6ZkjTu95S+rspxXpykRC7bpweboCdd8jzs/HIrpFOzPpeajwzNbciBHtMb8ZViTx9s3JM94iMxGXEVdMHJZFlFS/vvmIXoNmvdRgW3NGNZKEIpIggdN5vZBO49wyU02UvDymXC4mCMB73BQRDeDxIX5wYFhQtFl/8rC/VXFCVVVzX0LWTDfgFMf3/zn53qTiFFKvTXa5H+dh9ID+MfCOPWPL/4KOFCpTpFqK0u3B4O1ShXe+13fNsXoqEglpQn0so+fldzL+djqQ+4IcwRCbPf8S95yjYSOt4Ga7rocNBcTFfIuprH0XkLNAFn8sqgvNcobf5QBqxvMOnEorw8PjZhNUNe84h6bJ3zv3nUVZCDUOqmNIpcsMStcLf1MD0qvxUtIDQJMghQ=
